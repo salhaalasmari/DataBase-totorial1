@@ -1,0 +1,56 @@
+create  database store;
+
+create table store.countries(
+  code int primary key ,
+  name varchar(20) unique,
+  continent_name varchar(20) not null
+);
+create  table  store.users(
+    id int primary key ,
+    full_name varchar(20),
+    email varchar(20) unique ,
+    gender char(1) check (gender='m'or gender='f'),
+    created_at datetime ,
+     continent_code int ,
+     foreign key (continent_code) references countries(code)
+) ;
+drop table store.orders;
+drop table store.users;
+create table store.orders(
+  id int primary key ,
+  user_id int ,
+  status varchar(6) check (status='start' or status='finish'),
+  foreign key (user_id) references users(id)
+);
+create  table store.products(
+  id int primary key ,
+  name varchar(10) not null ,
+  price int default 0,
+  status varchar(10) check ( status='valid'or  status='expired'),
+  created_at datetime
+);
+create table store.order_items(
+    order_id int ,
+    product_id int ,
+    quantity int default 0,
+    foreign key (order_id) references orders(id),
+    foreign key (product_id) references products(id)
+
+);
+alter table store.products alter column created_at SET DEFAULT now();
+alter table store.users alter column created_at SET DEFAULT now();
+insert into store.countries values (100 , 'KSA','Riyadh');
+insert into store.users values (439003156,'Salha','salha@gmail.com
+','m',NOW(),100);
+insert into store.users values (441003156,'noura','non@gmail.com
+','m',NOW(),100);
+insert  into store.orders values (2005,439003156,'start');
+insert into store.products values (2322,'phone',1000,'expired',now());
+insert into store.order_items values (2005,2322,22);
+update store.countries  set name='India' where code=100;
+delete from store.order_items where product_id=2322;
+delete from store.products where status='expired';
+
+
+
+
